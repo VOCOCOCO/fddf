@@ -79,7 +79,7 @@
             if (isSpinning) return;
 
             // Оплата через Telegram
-            const invoiceLink = "https://t.me/$nPxJ3n-UOEukDgAA8erjOqzO-Vc";
+            const invoiceLink = "https://t.me/$YOUR_BOT_USERNAME?start=payment_10_stars";
             window.Telegram.WebApp.openInvoice(invoiceLink, (status) => {
                 if (status === "paid") {
                     startRoulette();
@@ -94,13 +94,13 @@
 
             // Начальная быстрая скорость
             roulette.style.transition = "transform 0.5s linear";
-            roulette.style.transform = translateX(-500px);
+            roulette.style.transform = `translateX(-500px)`;
 
             setTimeout(() => {
                 // Плавное замедление
                 const randomStop = -Math.floor(Math.random() * 10) * 110 + "px";
                 roulette.style.transition = "transform 4s ease-out";
-                roulette.style.transform = translateX(${randomStop});
+                roulette.style.transform = `translateX(${randomStop})`;
 
                 setTimeout(() => {
                     alert("Поздравляем! Вам выпал подарок!");
