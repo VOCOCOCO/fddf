@@ -79,7 +79,7 @@
             if (isSpinning) return;
 
             // Оплата через Telegram
-            const invoiceLink = "https://t.me/$YOUR_BOT_USERNAME?start=payment_10_stars";
+            const invoiceLink = "https://t.me/$nPxJ3n-UOEukDgAA8erjOqzO-Vc";
             window.Telegram.WebApp.openInvoice(invoiceLink, (status) => {
                 if (status === "paid") {
                     startRoulette();
