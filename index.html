@@ -16,8 +16,8 @@
             margin-top: 20px;
         }
         .roulette-container {
-            width: 320px;
-            height: 120px;
+            width: 350px;
+            height: 150px; /* Увеличена высота */
             margin: 20px auto;
             border: 4px solid #444;
             border-radius: 15px; /* Гладкие края */
@@ -29,12 +29,12 @@
             display: flex;
             position: relative;
             left: 0;
-            transition: transform 5s ease-out; /* Плавное замедление */
+            transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1); /* Плавное замедление */
         }
         .roulette img {
-            width: 100px;
-            height: 100px;
-            margin: 10px;
+            width: 120px;
+            height: 120px;
+            margin: 15px;
             border-radius: 10px; /* Скругление изображений */
         }
         #spinButton {
@@ -79,7 +79,7 @@
             if (isSpinning) return;
 
             // Оплата через Telegram
-            const invoiceLink = "https://t.me/$nPxJ3n-UOEukDgAA8erjOqzO-Vc";
+            const invoiceLink = "https://t.me/$YOUR_BOT_USERNAME?start=payment_10_stars";
             window.Telegram.WebApp.openInvoice(invoiceLink, (status) => {
                 if (status === "paid") {
                     startRoulette();
@@ -93,20 +93,20 @@
             isSpinning = true;
 
             // Начальная быстрая скорость
-            roulette.style.transition = "transform 0.5s linear";
-            roulette.style.transform = `translateX(-500px)`;
+            roulette.style.transition = "transform 1s linear";
+            roulette.style.transform = `translateX(-1000px)`;
 
             setTimeout(() => {
-                // Плавное замедление
-                const randomStop = -Math.floor(Math.random() * 10) * 110 + "px";
-                roulette.style.transition = "transform 4s ease-out";
+                // Длительное плавное замедление
+                const randomStop = -Math.floor(Math.random() * 10) * 140 + "px";
+                roulette.style.transition = "transform 6s cubic-bezier(0.25, 1, 0.5, 1)";
                 roulette.style.transform = `translateX(${randomStop})`;
 
                 setTimeout(() => {
                     alert("Поздравляем! Вам выпал подарок!");
                     isSpinning = false;
-                }, 4000);
-            }, 500);
+                }, 6000);
+            }, 1000);
         }
     </script>
 </body>
