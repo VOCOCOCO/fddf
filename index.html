@@ -29,7 +29,7 @@
             display: flex;
             position: relative;
             left: 0;
-            transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1); /* Плавное замедление */
+            transition: transform 6s cubic-bezier(0.1, 1, 0.3, 1); /* Ускорение и замедление */
         }
         .roulette img {
             width: 120px;
@@ -92,21 +92,16 @@
         function startRoulette() {
             isSpinning = true;
 
-            // Начальная быстрая скорость
-            roulette.style.transition = "transform 1s linear";
-            roulette.style.transform = `translateX(-1000px)`;
+            // Случайное конечное положение (влево)
+            const randomStop = -Math.floor(Math.random() * 10) * 140 - 2000; // Длинный пролет влево
+            
+            roulette.style.transition = "transform 6s cubic-bezier(0.1, 1, 0.3, 1)";
+            roulette.style.transform = `translateX(${randomStop}px)`;
 
             setTimeout(() => {
-                // Длительное плавное замедление
-                const randomStop = -Math.floor(Math.random() * 10) * 140 + "px";
-                roulette.style.transition = "transform 6s cubic-bezier(0.25, 1, 0.5, 1)";
-                roulette.style.transform = `translateX(${randomStop})`;
-
-                setTimeout(() => {
-                    alert("Поздравляем! Вам выпал подарок!");
-                    isSpinning = false;
-                }, 6000);
-            }, 1000);
+                alert("Поздравляем! Вам выпал подарок!");
+                isSpinning = false;
+            }, 6000);
         }
     </script>
 </body>
