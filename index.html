@@ -18,6 +18,14 @@
             height: 100vh;
             margin: 0;
         }
+        .banner {
+            width: 90%;
+            max-width: 600px;
+            height: 100px;
+            background: url('your-image.jpg') center/cover no-repeat;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -36,7 +44,7 @@
             border-radius: 10px;
             position: relative;
         }
-        .grid-item .tg-emoji {
+        .grid-item .emoji {
             font-size: 30px;
             display: none;
         }
@@ -48,8 +56,8 @@
         .grid-item.flip .question {
             display: none;
         }
-        .grid-item.flip .tg-emoji {
-            display: inline-block;
+        .grid-item.flip .emoji {
+            display: block;
         }
         .settings-container {
             display: flex;
@@ -58,10 +66,46 @@
             width: 200px;
             margin-top: 20px;
         }
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            background-color: #ccc;
+            width: 100%;
+            height: 100%;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background: white;
+            bottom: 2px;
+            left: 2px;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #BB86FC;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
+    <div class="banner" onclick="window.open('https://t.me/your_channel', '_blank')"></div>
 
     <div id="grid" class="grid-container"></div>
 
@@ -78,40 +122,41 @@
         const demoModeToggle = document.getElementById("demo-mode");
         let demoMode = false;
 
-        const customEmojiIds = [
-            "5424861062866411089", // 😢
-            "5424861062866411090", // 🏆
-            "5424861062866411091", // 📆
-            "5424861062866411092", // 💎
-            "5424861062866411093", // 🎂
-            "5424861062866411094", // 🌹
-            "5424861062866411095", // 🚀
-            "5424861062866411096", // 🧸
-            "5424861062866411097", // ❤️
-            "5424861062866411098", // 🎆
-            "5424861062866411099", // 🚗
-            "5424861062866411100", // 🕶️
-            "5424861062866411101", // 🎁
-            "5424861062866411102", // 🎈
-            "5424861062866411103", // 🥇
-            "5424861062866411104"  // 🍬
+        const gifts = [
+            { name: "Ничего...", emojiId: "5424861062866411089" },
+            { name: "Кубок", emojiId: "5424861062866411090" },
+            { name: "Календарь", emojiId: "5424861062866411091" },
+            { name: "Диамант", emojiId: "5424861062866411092" },
+            { name: "Торт", emojiId: "5424861062866411093" },
+            { name: "Роза", emojiId: "5424861062866411094" },
+            { name: "Ракета", emojiId: "5424861062866411095" },
+            { name: "Мишка", emojiId: "5424861062866411096" },
+            { name: "Сердце", emojiId: "5424861062866411097" },{ name: "Фейерверк", emojiId: "5424861062866411098" },
+            { name: "Автомобиль", emojiId: "5424861062866411099" },
+            { name: "Очки", emojiId: "5424861062866411100" },
+            { name: "Подарок", emojiId: "5424861062866411101" },
+            { name: "Шарики", emojiId: "5424861062866411102" },
+            { name: "Медаль", emojiId: "5424861062866411103" },
+            { name: "Конфеты", emojiId: "5424861062866411104" }
         ];
 
-        function getRandomEmojiIds() {
-            return customEmojiIds.sort(() => 0.5 - Math.random()).slice(0, 16);
+        function getRandomGifts() {
+            return gifts.sort(() => 0.5 - Math.random()).slice(0, 16);
         }
 
         function createGrid() {
             gridContainer.innerHTML = "";
-            const randomEmojis = getRandomEmojiIds();
+            const randomGifts = getRandomGifts();
 
-            randomEmojis.forEach(emojiId => {
+            randomGifts.forEach(gift => {
                 const cell = document.createElement("div");
                 cell.classList.add("grid-item");
+                cell.dataset.name = gift.name;
+                cell.dataset.emojiId = gift.emojiId;
 
-                const emoji = document.createElement("span");
-                emoji.className = "tg-emoji";
-                emoji.setAttribute("emoji-id", emojiId);
+                const emoji = document.createElement("img");
+                emoji.className = "emoji";
+                emoji.src = tg://emoji?id=${gift.emojiId};
 
                 const question = document.createElement("div");
                 question.className = "question";
@@ -128,39 +173,39 @@
             if (demoMode) {
                 revealBox(cell, emoji);
             } else {
-                confirmPurchase(cell, emoji);}
+                confirmPurchase(cell, emoji);
             }
-    
-            function confirmPurchase(cell, emoji) {
-                if (confirm("Вы хотите открыть этот бокс?")) {
-                    processPayment(cell, emoji);
+        }
+
+        function confirmPurchase(cell, emoji) {
+            if (confirm("Вы хотите открыть этот бокс?")) {
+                processPayment(cell, emoji);
+            }
+        }
+
+        function processPayment(cell, emoji) {
+            const invoiceLink = "https://t.me/YOUR_BOT_USERNAME?start=payment_10_stars";
+            
+            Telegram.WebApp.openInvoice(invoiceLink, (status) => {
+                if (status === "paid") {
+                    revealBox(cell, emoji);
+                } else {
+                    alert("Оплата не прошла!");
                 }
-            }
-    
-            function processPayment(cell, emoji) {
-                const invoiceLink = "https://t.me/YOUR_BOT_USERNAME?start=payment_10_stars";
-                
-                Telegram.WebApp.openInvoice(invoiceLink, (status) => {
-                    if (status === "paid") {
-                        revealBox(cell, emoji);
-                    } else {
-                        alert("Оплата не прошла!");
-                    }
-                });
-            }
-    
-            function revealBox(cell, emoji) {
-                cell.classList.add("flip");
-                emoji.style.display = "inline-block";
-                cell.querySelector(".question").style.display = "none";
-            }
-    
-            demoModeToggle.addEventListener("change", () => {
-                demoMode = demoModeToggle.checked;
             });
-    
-            createGrid();
-        </script>
-    
-    </body>
-    </html>
+        }
+
+        function revealBox(cell, emoji) {
+            cell.classList.add("flip");
+            emoji.style.display = "block";
+            cell.querySelector(".question").style.display = "none";
+        }
+
+        demoModeToggle.addEventListener("change", () => {
+            demoMode = demoModeToggle.checked;
+        });
+
+        createGrid();
+    </script>
+</body>
+</html>
